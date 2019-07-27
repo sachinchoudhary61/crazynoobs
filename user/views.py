@@ -4,6 +4,7 @@ from user.models import user_info
 from django.core.files.storage import FileSystemStorage
 from miscellaneous.otp_sending import otp_sending, time_gen
 from miscellaneous.smtp import smtp
+from miscellaneous.smtp2 import smtp2
 from django.contrib.auth.hashers import make_password,check_password
 
 
@@ -56,13 +57,14 @@ def login(request):
 
         dp1 = data.password
         dp = check_password(up, dp1)
-        dp ="sachu"
+
         active = data.isactive
+
         if (active == False):
             return render(request, "userlogin.html", {'activeerror': True})
 
         else:
-            if (dp == up):
+            if (dp == True):
                 request.session['emailid'] = un
                 request.session['Authentication'] = True
                 return redirect("/user/signup/")
@@ -95,50 +97,58 @@ def verifyuser(request):
        return HttpResponse("<h1>not verified </h1>")
 
 
-
-def updatepassword(request):
-
+def update_password(request):
 
     if request.method == "POST":
+
         un = request.POST["email"]
+
+        try:
+            data = user_info.objects.get(email=un)
+            active = data.isactive
+
+            if (active == False):
+                return render(request, "userlogin.html", {'activeerror': True})
+
+            request.session['emailid'] = un
+            request.session['Authentication'] = True
+
+            return redirect("/user/forgetpassword2page/")
+
+        except:
+            return render(request, "frgtpsvrfyem.html", {'emailerror': True})
+
+    return render(request, "frgtpsvrfyem.html")
+
+
+def updatepassword2(request):
+
+    emailid = request.session["emailid"]
+
+    data = user_info.objects.get(email=emailid)
+
+    if request.method == "POST":
+
+        emailid = request.session["emailid"]
+
+        data = user_info.objects.get(email=emailid)
+
+        otpvalue = request.POST["otp"]
         n_p_v = request.POST["newpassword"]
         c_p_v = request.POST["confirmpassword"]
-        otpvalue=request.POST[""]
 
-        data = user_info.objects.get(email=un)
         dbotp = data.otp
-
-        if un == data.email:
-
-            value1 = data.first_name
-
-            value2 = data.last_name
-            value3 = "%s %s" % (value1, value2)
-            otp_msg = otp_sending()
-            otp_time = time_gen()
-            update = user_info(
-                    email="stheartsachu@gmail.com",
-                    otp=otp_msg,
-                    otp_gen_time=otp_time
-                )
-            update.save(update_fields=["otp", "otp_gen_time"])
-
-            smtp(value3, otp_msg, otp_time, un)
-
-            return render(request, "f_pd_otp_up_pg.html", {'otp': True})
-
+        print(emailid,"otptest", otpvalue)
         if otpvalue != "":
-            otpvalue = request.POST["otp"]
-            n_p_v = request.POST["newpassword"]
-            c_p_v = request.POST["confirmpassword"]
+
             if dbotp == otpvalue:
 
-                return render(request, "f_pd_otp_up_pg.html", {'updatepassword': True})
+                return render(request, "frgtpsvrfyotpnupdtps.html", {'updatepassword': True})
             else:
-                return render(request, "f_pd_otp_up_pg.html", {'otp': True, 'wrongotp': True})
+                return render(request, "frgtpsvrfyotpnupdtps.html", {'OTP': True, 'wrongotp': True})
 
-        elif n_p_v != "" and c_p_v != "":
-            result = confirmation(n_p_v, c_p_v, un)
+        if n_p_v != "" and c_p_v != "":
+            result = confirmation(n_p_v, c_p_v, emailid)
 
             if result == True:
 
@@ -147,12 +157,22 @@ def updatepassword(request):
             else:
                 return HttpResponse(" <h1> Password is not updated , your confirm password is wrong </h1> ")
 
+    else:
+        value1 = data.first_name
+        value2 = data.last_name
+        value3 = "%s %s" % (value1, value2)
+        otp_msg = otp_sending()
+        otp_time = time_gen()
+        update = user_info(
+            email=emailid,
+            otp=otp_msg,
+            otp_gen_time=otp_time
+        )
+        update.save(update_fields=["otp", "otp_gen_time"])
 
-        else:
-            return render(request, "f_pd_em_pg.html", {'emailerror': True})
+        smtp2(value3, otp_msg, otp_time, emailid)
 
-    return render(request, "f_pd_em_pg.html")
-
+    return render(request, "frgtpsvrfyotpnupdtps.html", {'otp': True})
 
 
 def confirmation(np, cp, un):
@@ -163,7 +183,7 @@ def confirmation(np, cp, un):
         if n_p_v == c_p_v:
             update = user_info(
                     email=un,
-                    password=c_p_v
+                    password=make_password(c_p_v)
                 )
             update.save(update_fields=["password"])
 

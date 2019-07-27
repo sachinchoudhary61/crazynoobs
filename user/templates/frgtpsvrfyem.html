@@ -8,12 +8,15 @@
 		<form method="POST">
 
             {% csrf_token %}
-            <input type="text" name="email" id="email">
 
-            {% if emailerror %}
-            <script> alert("email is wrong")</script>
-            {% endif %}
-			<a href="/user/forgetpassworduppage/"><input type="submit" value="CONFIRM"></a>
+			<input type="text" name="email" id="email">
+			<a href="/user/forgetpassword2page/"><input type="submit" value="CONFIRM"></a>
+
+			{% if emailerror %}
+			<script> alert("email is wrong")</script>
+			{% endif %}
+
+
 
 		</form>
 	</div>
