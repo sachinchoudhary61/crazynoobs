@@ -1,0 +1,76 @@
+{% extends 'user_login_actcr.html' %}
+{% block signup_content %}
+
+<div class="book-grids">
+    <div class="col-md-6 book-left">
+        <div class="book-left-info">
+            <h3>Create Your Govihar Account</h3>
+        </div>
+        <div class="book-left-form">
+            <form id="loginForm" method="post">
+                {% csrf_token %}
+                <div class="login-grids">
+                    <div class="login-grid-left">
+                        <fieldset id="body">
+                            <fieldset>
+
+                                <label for="email">Email Address</label>
+                                <input type="text" name="email" id="email">
+                                {% if emailerror %}
+                                <script> alert("email is wrong")</script>
+                                {% endif %}
+
+                            </fieldset>
+                            <fieldset>
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password">
+                                {% if passworderror %}
+                                <script>alert ("password is wrong")</script>
+                                {% endif %}
+                                {% if activeerror %}
+                                <script>alert ("not active user")</script>
+                                {% endif %}
+                            </fieldset>
+
+                            <input type="submit" id="login" value="Sign in">
+                            <label for="checkbox"><input type="checkbox" id="checkbox"> <i>Remember me</i></label>
+                        </fieldset>
+                        <span><a href="/user/forgetpasswordpage/">Forgot your password?</a></span>
+                        <div class="or-grid">
+                            <p>OR</p>
+                        </div>
+
+                            <div class="button-bottom">
+                                <p>New account? <a href="/user/signup/">Signup</a></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6 book-left book-right">
+        <div class="book-left-info">
+            <h3>Recommended</h3>
+        </div>
+        <div class="book-left-bottom">
+            <div class="book-left-facebook">
+                <a href="#">login with Facebook</a>
+            </div>
+            <div class="book-left-chrome">
+                <a href="#">Login with Google</a>
+            </div>
+        </div>
+        <ul>
+            <li>Access booking history with upcoming trips</li>
+            <li>Print tickets and invoices</li>
+            <li>Make checkouts simpler</li>
+            <li>Enter your contact details only once</li>
+            <li>Get alerts for low fares</li>
+        </ul>
+    </div>
+    <div class="clearfix"> </div>
+</div>
+
+{% endblock %}

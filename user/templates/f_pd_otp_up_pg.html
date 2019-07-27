@@ -1,0 +1,45 @@
+{% extends 'user_forget_password.html' %}
+{% block forget_p_content %}
+	<div class="element-main">
+		<h1>Password assistance</h1>
+		<p>
+			Check your email associated with your account..</p>
+		<form method="POST">
+				{% csrf_token %}
+
+				{% if emailerror %}
+				<input type="text" name="email" id="email">
+				<input type="hidden" name = "otp"  />
+				<input type="hidden" name = "newpassword"  />
+				<input type="hidden" name = "confirmpassword"  />
+	            <script> alert("email is wrong")</script>
+				<input type="submit" value="CONFIRM">
+
+            	{% endif %}
+
+				{% if otp %}
+				<label>OTP</label>
+				<input type="text" name = "otp" id="otp" />
+				<input type="hidden" name="email" >
+				<input type="hidden" name = "newpassword"  />
+				<input type="hidden" name = "confirmpassword"  />
+				<input type = "submit" value="CONFIRM">
+				{% endif %}
+
+				{% if updatepassword %}
+
+				<input type="hidden" name="email" >
+				<input type="hidden" name = "otp"  />
+				<label>NEW-PASSWORD</label>
+				<input type="text" name = "newpassword" />
+
+				<label>CONFIRM-PASSWORD</label>
+				<input type="text" name = "confirmpassword" />
+
+				<input type = "submit" value="UPDATE">
+
+				{% endif %}
+
+		</form>
+	</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'user_forget_password.html' %}
+{% block forget_p_content %}
+
+	<div class="element-main">
+		<h1>Password assistance</h1>
+		<p>
+			Enter the email address associated with your account..</p>
+		<form method="POST">
+
+            {% csrf_token %}
+            <input type="text" name="email" id="email">
+
+            {% if emailerror %}
+            <script> alert("email is wrong")</script>
+            {% endif %}
+			<a href="/user/forgetpassworduppage/"><input type="submit" value="CONFIRM"></a>
+
+		</form>
+	</div>
+
+{% endblock %}
