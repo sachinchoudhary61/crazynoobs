@@ -121,12 +121,12 @@ def update_password(request):
             return redirect("/user/forgetpassword2page/")
 
         except:
-            return render(request, "frgtpsvrfyem.html", {'emailerror': True})
+            return render(request, "forget_password_email.html", {'emailerror': True})
 
-    return render(request, "frgtpsvrfyem.html")
+    return render(request, "forget_password_email.html")
 
 
-def updatepassword2(request):
+def resetpassword(request):
 
     emailid = request.session["emailid"]
 
@@ -148,9 +148,9 @@ def updatepassword2(request):
 
             if dbotp == otpvalue:
 
-                return render(request, "frgtpsvrfyotpnupdtps.html", {'updatepassword': True})
+                return render(request, "reset_password.html", {'updatepassword': True})
             else:
-                return render(request, "frgtpsvrfyotpnupdtps.html", {'OTP': True, 'wrongotp': True})
+                return render(request, "reset_password.html", {'OTP': True, 'wrongotp': True})
 
         if n_p_v != "" and c_p_v != "":
             result = confirmation(n_p_v, c_p_v, emailid)
@@ -177,7 +177,7 @@ def updatepassword2(request):
 
         smtp2(value3, otp_msg, otp_time, emailid)
 
-    return render(request, "frgtpsvrfyotpnupdtps.html", {'otp': True})
+    return render(request, "reset_password.html", {'otp': True})
 
 
 def confirmation(np, cp, un):
