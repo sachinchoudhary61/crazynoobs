@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 from miscellaneous.otp_sending import otp_sending, time_gen
 from miscellaneous.smtp import smtp
 from miscellaneous.smtp2 import smtp2
+from miscellaneous.autherize import autherize
 from django.contrib.auth.hashers import make_password,check_password
 
 
@@ -65,8 +66,12 @@ def login(request):
 
         else:
             if (dp == True):
-                request.session['emailid'] = un
+
                 request.session['Authentication'] = True
+                request.session['emailid'] = un
+                data = user_info.objects.get(email=un)
+                request.session['role'] = data.roleid_id
+
                 return redirect("/user/signup/")
             else:
                 return render(request, "userlogin.html", {'passworderror': True})
@@ -190,3 +195,22 @@ def confirmation(np, cp, un):
             return True
         else:
             return False
+def admin_index(request):
+
+    auth = autherize(request.session['Authentication'],
+                     request.session['role'], 2)
+
+    if auth == True:
+        return render(request, "index.html")
+
+    else:
+        aut, msg = auth
+        if msg == "wrongUser":
+            return HttpResponse("you are not a valid user")
+        elif msg == "notLogin":
+            return HttpResponse("you are not login for access this page")
+
+def logout(request):
+    request.session['Authentication'] = False
+    request.session['emailid'] = ""
+    return redirect("/user/login/")
