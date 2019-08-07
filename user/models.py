@@ -1,10 +1,13 @@
 from django.db import models
 
-# Create your models here.
+# Create your models here
 class userrole(models.Model):
     roleid = models.AutoField(primary_key=True)
     rolename = models.CharField(max_length=200, unique=True, default="")
 
+class appscategory(models.Model):
+      app_id = models.AutoField(primary_key=True)
+      app_name = models.CharField(max_length=200, unique=True, default="")
 class user_info(models.Model):
 
     roleid = models.ForeignKey(userrole, on_delete=models.CASCADE, default="")
@@ -19,3 +22,8 @@ class user_info(models.Model):
     otp_gen_time = models.CharField(max_length=200, null=True)
     isactive = models.BooleanField(default=False)
     token = models.CharField(max_length=200, default="")
+    business_user_business_info = models.TextField(default="")
+    #business_id = models.CharField(max_length=200, default="")
+    app_id = models.ForeignKey(appscategory, on_delete=models.CASCADE, default="")
+
+

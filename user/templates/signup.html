@@ -22,10 +22,66 @@
                 <input type="password" name="password" id="password">
                 <p>Confirm Password</p>
                 <input type="password" name="confirm_password" id="confirm-password">
+                <div class="form-row">
+                    <div class="name">User Type</div>
+                        <div class="value">
+                            <div class="input-group">
+                                <div class="rs-select2 js-select-simple select--no-search">
+                                    <select name="User_Type">
+                                        <option disabled="disabled" selected="selected">Choose Here</option>
+                                        <option value="2">Normal User</option>
+                                        <option value="3">Business User</option>
+                                    </select>
+                                        <div class="select-dropdown"></div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="form-row p-t-20">
+                    <label class="label label--block">Select your Business type </label>
+                        <div class="p-t-15">
+                            <label class="radio-container m-r-55">Flight Traveller Agent
+                                <input type="radio" checked="checked" name="business" value="1">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="p-t-15">
+                            <label class="radio-container m-r-55">Hotel Agent
+                                <input type="radio" checked="checked" name="business" value="2">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="p-t-15">
+                            <label class="radio-container m-r-55">Taxi Traveller Agent
+                                <input type="radio" checked="checked" name="business" value="4">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="p-t-15">
+                            <label class="radio-container m-r-55">Bus Traveller Agent
+                                <input type="radio" checked="checked" name="business" value="5">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                        <div class="p-t-15">
+                            <label class="radio-container m-r-55">Train Traveller Agent
+                                <input type="radio" checked="checked" name="business" value="3">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+                </div>
+                <div class="form-row">
+                    <div class="name">Give your Business details to the admin </div>
+                        <div class="value">
+                                <div class="input-group">
+                                    <textarea class="textarea--style-6" name="message" placeholder="Message sent to the admin  "></textarea>
+                                </div>
+                        </div>
+                </div>
                 <label for="checkbox"><input type="checkbox" id="checkbox"> <i>Remember me</i></label>
                 <input type="submit" id="login" value="Register">
 
-            </form>
+                </form>
         </div>
     </div>
     <div class="col-md-6 book-left book-right">
@@ -39,9 +95,7 @@
             <div class="book-left-chrome">
                 <a href="#">Connect with Google</a>
             </div>
-            <div class="book-left-chrome">
-                <a href="/user/logout/">Connect with Google</a>
-            </div>
+
         </div>
         <ul>
             <li>Access booking history with upcoming trips</li>
@@ -49,6 +103,10 @@
             <li>Make checkouts simpler</li>
             <li>Enter your contact details only once</li>
             <li>Get alerts for low fares</li>
+
+            <div class="book-left-chrome">
+                <a href="/user/logout/">LOGOUT</a>
+            </div>
         </ul>
     </div>
     <div class="clearfix"> </div>

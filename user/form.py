@@ -6,4 +6,5 @@ class user_info_form(forms.ModelForm):
         model = user_info
         #fields = '__all_' # automatically
 
-        exclude = ["roleid", "first_name", "last_name", "email", "password", "mobile_no", "address", "image", "otp", "otp_gen_time", "isactive", "token"]
+        exclude = ["roleid", "first_name", "last_name", "email", "password", "mobile_no", "address", "image", "otp", "otp_gen_time", "isactive", "token", "app_id",
+                   "business_user_business_info"]

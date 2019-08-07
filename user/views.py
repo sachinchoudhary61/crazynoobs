@@ -22,27 +22,47 @@ def signup(request):
         form = user_info_form(request.POST)
         f = form.save(commit=False)
 
-        f.image = user_image
-        f.roleid_id = 2
-        f.first_name = request.POST["first_name"]  # column name
-        f.last_name = request.POST["last_name"]
-        f.email = request.POST["email"]
-        f.password = make_password(request.POST["confirm_password"])
-        f.mobile_no = request.POST["mobile_no"]
+        role_id_1 = request.POST["User_Type"]
+        role_id = int(role_id_1)
         #f.address = request.POST["address"]
-        f.otp = otp_sending()  # column name
-        f.otp_time_gen = time_gen()
-        time = "%s%s" % (time_gen())
-        token = f.otp+time
-        x = "%s %s" % (f.first_name, f.last_name)
-        link = 'http://127.0.0.1:8000/user/activeuser/?token='+str(token)+'&email='+request.POST["email"]
 
-        f.token = token
+        if role_id == 2:
 
-        f.save()
-        smtp(x, link, f.otp_time_gen, f.email)
+            f.image = user_image
+            f.first_name = request.POST["first_name"]  # column name
+            f.last_name = request.POST["last_name"]
+            f.email = request.POST["email"]
+            f.password = make_password(request.POST["confirm_password"])
+            f.mobile_no = request.POST["mobile_no"]
+            f.app_id_id = 6
+            f.roleid_id = 2
+            f.otp = otp_sending()  # column name =
+            f.otp_gen_time = time_gen()
+            time = "%s%s" % (time_gen())
+            token = f.otp+time
+            x = "%s %s" % (f.first_name, f.last_name)
+            link = 'http://127.0.0.1:8000/user/activeuser/?token='+str(token)+'&email='+request.POST["email"]
 
-        return HttpResponse("<h1> VERIFY THE USER , SEE YOUR EMAIL </h1>")
+            f.token = token
+            smtp(x, link, f.otp_gen_time, f.email)
+
+            f.save()
+            return HttpResponse("<h1> VERIFY THE USER , SEE YOUR EMAIL </h1>")
+
+        if role_id == 3:
+
+            f.image = user_image
+            f.first_name = request.POST["first_name"]  # column name
+            f.last_name = request.POST["last_name"]
+            f.email = request.POST["email"]
+            f.password = make_password(request.POST["confirm_password"])
+            f.mobile_no = request.POST["mobile_no"]
+            f.roleid_id = 3
+            f.app_id_id = request.POST["business"]
+            f.business_user_business_info = request.POST["message"]
+            f.save()
+            return HttpResponse("<h1> After verify all details your account is activated ,you will get an mail on confirmation</h1>")
+
     return render(request, "signup.html")
 
 def login(request):
@@ -54,10 +74,12 @@ def login(request):
             data = user_info.objects.get(email=un)
 
         except:
+
             return render(request, "userlogin.html", {'emailerror': True})
 
         dp1 = data.password
         dp = check_password(up, dp1)
+        r_id = data.roleid_id
 
         active = data.isactive
 
@@ -66,13 +88,20 @@ def login(request):
 
         else:
             if (dp == True):
+                if r_id == 2:
 
-                request.session['Authentication'] = True
-                request.session['emailid'] = un
-                data = user_info.objects.get(email=un)
-                request.session['role'] = data.roleid_id
+                    request.session['Authentication'] = True
+                    request.session['emailid'] = un
+                    data = user_info.objects.get(email=un)
+                    request.session['role'] = data.roleid_id
 
-                return redirect("/user/signup/")
+                    return redirect("/user/signup/")
+                else:
+                    request.session['Authentication'] = True
+                    request.session['emailid'] = un
+                    d2 = user_info.objects.get(email=un)
+
+                    return render(request, "hotelindex.html", {"ud": d2})
             else:
                 return render(request, "userlogin.html", {'passworderror': True})
 
@@ -117,7 +146,6 @@ def update_password(request):
 
             request.session['emailid'] = un
             request.session['Authentication'] = True
-
             return redirect("/user/forgetpassword2page/")
 
         except:
@@ -129,7 +157,7 @@ def update_password(request):
 def resetpassword(request):
 
     emailid = request.session["emailid"]
-
+    request.session['Authentication'] = True
     data = user_info.objects.get(email=emailid)
 
     if request.method == "POST":
@@ -196,9 +224,11 @@ def confirmation(np, cp, un):
         else:
             return False
 def admin_index(request):
-
-    auth = autherize(request.session['Authentication'],
+    try:
+        auth = autherize(request.session['Authentication'],
                      request.session['role'], 2)
+    except:
+        return redirect("/user/login")
 
     if auth == True:
         return render(request, "index.html")
@@ -206,11 +236,17 @@ def admin_index(request):
     else:
         aut, msg = auth
         if msg == "wrongUser":
-            return HttpResponse("you are not a valid user")
+
+            #return HttpResponse("you are not a valid user")
+            return redirect("/user/login")
         elif msg == "notLogin":
-            return HttpResponse("you are not login for access this page")
+            return redirect("/user/login")
+            #return HttpResponse("you are not login for access this page")
 
 def logout(request):
     request.session['Authentication'] = False
     request.session['emailid'] = ""
     return redirect("/user/login/")
+
+def hoteldisplaypage(request):
+    return render(request, "hoteldisplaypage.html")

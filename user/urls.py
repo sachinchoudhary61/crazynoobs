@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from user import views
+from manager.views import businessusermainpage
 app_name = "user"
 
 urlpatterns = [
@@ -11,7 +12,6 @@ urlpatterns = [
     url(r'^forgetpassword2page/$', views.resetpassword),
     url(r'^index/$', views.admin_index),
     url(r'^logout/$', views.logout),
-
-
+    url(r'^allhoteldisplaypage/$', views.hoteldisplaypage)
 
 ]
